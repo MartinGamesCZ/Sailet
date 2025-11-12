@@ -1,5 +1,5 @@
 export type CommandType = {
-  command: string;
+  command: (string | CommandType)[];
 };
 
 export type CommandReturnType = any;

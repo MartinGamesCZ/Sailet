@@ -1,7 +1,10 @@
 // sailet.config.ts
 
-import { script, step, cmd } from "sailet";
+import { script, step, cmd, $ } from "sailet";
 
 script("start", () => [
-  step("Run project using Bun", () => [cmd("bun run index.ts")]),
+  step("Run project using Bun", () => [
+    cmd("bun run index.ts"),
+    cmd($`echo Output is ${cmd("cat output.txt")}!`),
+  ]),
 ]);
