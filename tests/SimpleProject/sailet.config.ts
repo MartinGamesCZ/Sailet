@@ -5,6 +5,7 @@ import { script, step, cmd, $ } from "sailet";
 script("start", () => [
   step("Run project using Bun", () => [
     cmd("bun run index.ts"),
-    cmd($`echo Output is ${cmd("cat output.txt")}!`),
+    cmd($`echo "Output is '${cmd("cat output.txt")}'"`),
   ]),
+  step("Remove output file", () => [cmd("rm output.txt")]),
 ]);

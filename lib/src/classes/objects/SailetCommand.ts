@@ -1,11 +1,17 @@
 import { exec, spawn } from "child_process";
 import type { CommandType } from "../../types/Command";
+import { SailetLogger, SailetLoggerTemplate } from "../SailetLogger";
+import chalk from "chalk";
 
 export class SailetCommandObject {
   public readonly command: (string | SailetCommandObject)[];
 
+  private logger: SailetLogger;
+
   constructor(command: (string | SailetCommandObject)[]) {
     this.command = command;
+
+    this.logger = new SailetLogger(SailetLoggerTemplate.Command, 4);
   }
 
   public static parse(command: CommandType): SailetCommandObject {
@@ -22,10 +28,19 @@ export class SailetCommandObject {
     suppressOutput: boolean = false,
     level: number = 0
   ): Promise<string> {
-    console.log(
-      `    ${" ".repeat(level)}Executing command: ${this.command
-        .map((part, i) => (typeof part === "string" ? part : "[Sub-command]"))
-        .join("")}`
+    this.logger = new SailetLogger(
+      level == 0
+        ? SailetLoggerTemplate.Command
+        : SailetLoggerTemplate.Subcommand,
+      4 + level
+    );
+
+    this.logger.log(
+      this.command
+        .map((part) =>
+          typeof part === "string" ? part : chalk.magenta("sub-command")
+        )
+        .join("")
     );
 
     const results: string[] = [];

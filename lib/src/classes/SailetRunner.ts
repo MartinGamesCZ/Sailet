@@ -1,5 +1,7 @@
+import chalk from "chalk";
 import { SailetScriptObject } from "./objects/SailetScript";
 import { SailetContext } from "./SailetContext";
+import { SailetLogger, SailetLoggerTemplate } from "./SailetLogger";
 
 export class SailetRunner {
   public static async runScript(scriptName: string) {
@@ -8,6 +10,9 @@ export class SailetRunner {
       console.error(`Script with name "${scriptName}" not found.`);
       return;
     }
+
+    const logger = new SailetLogger(SailetLoggerTemplate.Generic);
+    logger.log(`Running script ${chalk.blue(scriptName)}${chalk.gray("...")}`);
 
     await script.run();
   }

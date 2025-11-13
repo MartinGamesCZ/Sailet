@@ -20,8 +20,6 @@ export class RunCommand implements CommandClass {
     const scriptName = args[0]!;
     const directory = cwd();
 
-    console.log(`Running script "${scriptName}" in directory "${directory}"`);
-
     if (!ConfigFile.exists(directory)) {
       console.error(
         "No sailet.config.ts file found in the specified directory."
