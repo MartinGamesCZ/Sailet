@@ -26,14 +26,19 @@ export class SailetLoggerTemplate {
   )} ${chalk.gray("//")}`;
 
   static Generic = `${this.SailetPrefix} ${chalk.gray("%s")}`;
-  static Script = (name: string) =>
-    `${this.SailetPrefix} ${chalk.gray("SCRIPT")} ${chalk.blue(
-      name
-    )}${chalk.gray(" | %s")}`;
+  static Script = (name: string, submodule?: string) =>
+    `${this.SailetPrefix} ${chalk.gray("SCRIPT")} ${
+      submodule ? chalk.cyan(submodule) + "/" : ""
+    }${chalk.blue(name)}${chalk.gray(" | %s")}`;
   static Step = (name: string) =>
     `${chalk.gray("-")} ${chalk.gray("STEP")} ${chalk.yellow(name)}${chalk.gray(
       ": %s"
     )}`;
   static Command = `${chalk.magenta("$")} ${chalk.gray("%s")}`;
   static Subcommand = `${chalk.magenta("-")} ${chalk.gray("%s")}`;
+
+  static RemoteScript = (submodule: string, script: string) =>
+    `${chalk.gray("→")} ${chalk.gray("REMOTE SCRIPT")} ${chalk.cyan(
+      submodule
+    )}/${chalk.blue(script)}${chalk.gray(" | %s")}`;
 }

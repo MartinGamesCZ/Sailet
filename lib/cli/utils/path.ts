@@ -1,3 +1,5 @@
+import { SailetContext } from "../../src/classes/SailetContext";
+
 export function cwd() {
-  return process.cwd();
+  return SailetContext.getCwd() ?? process.cwd();
 }

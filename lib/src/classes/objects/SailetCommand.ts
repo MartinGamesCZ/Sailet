@@ -2,6 +2,7 @@ import { exec, spawn } from "child_process";
 import type { CommandType } from "../../types/Command";
 import { SailetLogger, SailetLoggerTemplate } from "../SailetLogger";
 import chalk from "chalk";
+import { cwd } from "../../../cli/utils/path";
 
 export class SailetCommandObject {
   public readonly command: (string | SailetCommandObject)[];
@@ -53,6 +54,7 @@ export class SailetCommandObject {
     const proc = spawn(results.join(""), {
       shell: true,
       stdio: ["inherit", "pipe", "inherit"],
+      cwd: cwd(),
     });
 
     return new Promise<string>((resolve) => {

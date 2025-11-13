@@ -1,16 +1,20 @@
 import type { StepType } from "../../types/Step";
 import { SailetLogger, SailetLoggerTemplate } from "../SailetLogger";
 import { SailetCommandObject } from "./SailetCommand";
+import { SailetRemoteScriptObject } from "./SailetRemoteScript";
 
 export class SailetStepObject {
   private readonly _name: string;
-  private readonly commands: SailetCommandObject[];
+  private readonly actions: (SailetCommandObject | SailetRemoteScriptObject)[];
 
   private logger: SailetLogger;
 
-  constructor(name: string, commands: SailetCommandObject[]) {
+  constructor(
+    name: string,
+    actions: (SailetCommandObject | SailetRemoteScriptObject)[]
+  ) {
     this._name = name;
-    this.commands = commands;
+    this.actions = actions;
 
     this.logger = new SailetLogger(SailetLoggerTemplate.Step(name), 2);
   }
@@ -18,7 +22,13 @@ export class SailetStepObject {
   public static parse(step: StepType): SailetStepObject {
     return new SailetStepObject(
       step.name,
-      step.commands().map(SailetCommandObject.parse)
+      step
+        .actions()
+        .map((a) =>
+          "remoteScript" in a
+            ? SailetRemoteScriptObject.parse(a)
+            : SailetCommandObject.parse(a)
+        )
     );
   }
 
@@ -27,10 +37,10 @@ export class SailetStepObject {
   }
 
   public async run() {
-    this.logger.log("Running commands...");
+    this.logger.log("Running actions...");
 
-    for (const command of this.commands) {
-      await command.run();
+    for (const action of this.actions) {
+      await action.run();
     }
   }
 }

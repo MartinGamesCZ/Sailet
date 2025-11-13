@@ -9,17 +9,23 @@ export class SailetScriptObject {
 
   private logger: SailetLogger;
 
-  constructor(name: string, steps: SailetStepObject[]) {
+  constructor(name: string, steps: SailetStepObject[], submodule?: string) {
     this.name = name;
     this.steps = steps;
 
-    this.logger = new SailetLogger(SailetLoggerTemplate.Script(this.name));
+    this.logger = new SailetLogger(
+      SailetLoggerTemplate.Script(this.name, submodule)
+    );
   }
 
-  public static parse(script: ScriptType): SailetScriptObject {
+  public static parse(
+    script: ScriptType,
+    submodule?: string
+  ): SailetScriptObject {
     return new SailetScriptObject(
       script.name,
-      script.steps().map(SailetStepObject.parse)
+      script.steps().map(SailetStepObject.parse),
+      submodule
     );
   }
 

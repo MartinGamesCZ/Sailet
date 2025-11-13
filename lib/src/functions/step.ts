@@ -4,6 +4,6 @@ import type { StepType } from "../types/Step";
 export function step(name: string, cmds: () => CommandType[]): StepType {
   return {
     name,
-    commands: cmds,
+    actions: cmds,
   };
 }

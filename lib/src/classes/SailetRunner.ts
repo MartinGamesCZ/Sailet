@@ -2,6 +2,7 @@ import chalk from "chalk";
 import { SailetScriptObject } from "./objects/SailetScript";
 import { SailetContext } from "./SailetContext";
 import { SailetLogger, SailetLoggerTemplate } from "./SailetLogger";
+import { SailetSubmodule } from "./modules/SailetSubmodule";
 
 export class SailetRunner {
   public static async runScript(scriptName: string) {
@@ -12,6 +13,21 @@ export class SailetRunner {
     }
 
     const logger = new SailetLogger(SailetLoggerTemplate.Generic);
+
+    let submodule: SailetSubmodule | null = null;
+
+    if (SailetContext.getSubmoduleId()) {
+      submodule = SailetSubmodule.parse(SailetContext.getSubmoduleId()!);
+      if (submodule)
+        await submodule.findModule(SailetContext.getSubmoduleId()!);
+    }
+
+    if (submodule)
+      logger.log(
+        `Using module ${chalk.blue(
+          SailetContext.getModule()?.getName()
+        )}${chalk.gray("...")}`
+      );
     logger.log(`Running script ${chalk.blue(scriptName)}${chalk.gray("...")}`);
 
     await script.run();
@@ -21,7 +37,10 @@ export class SailetRunner {
     for (const script of SailetContext.getScripts()) {
       if (script.name !== name) continue;
 
-      return SailetScriptObject.parse(script);
+      return SailetScriptObject.parse(
+        script,
+        SailetContext.getSubmoduleId() || undefined
+      );
     }
 
     return null;
