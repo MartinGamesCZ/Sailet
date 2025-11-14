@@ -1,6 +1,6 @@
 {
   "name": "sailet",
-  "version": "0.0.0",
+  "version": "0.1.1",
   "module": "src/index.ts",
   "exports": {
     ".": {
@@ -16,7 +16,7 @@
   },
   "scripts": {
     "build:cli": "bun build --outfile=dist/cli/index.js --target=node cli/index.ts",
-    "build:lib": "bun build --outfile=dist/lib/index.js --target=node src/index.ts",
+    "build:lib": "bun build --outfile=dist/lib/index.js --target=node src/index.ts && dts-bundle-generator -o dist/lib/index.d.ts src/index.ts",
     "build": "bun run build:cli && bun run build:lib"
   },
   "devDependencies": {
