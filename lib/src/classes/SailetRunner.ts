@@ -22,13 +22,16 @@ export class SailetRunner {
         await submodule.findModule(SailetContext.getSubmoduleId()!);
     }
 
-    if (submodule)
+    if (submodule || SailetContext.getModule())
       logger.log(
         `Using module ${chalk.blue(
           SailetContext.getModule()?.getName()
         )}${chalk.gray("...")}`
       );
     logger.log(`Running script ${chalk.blue(scriptName)}${chalk.gray("...")}`);
+
+    if (!submodule && SailetContext.getModule())
+      await SailetContext.getModule()!.loadSubmodules();
 
     await script.run();
   }
